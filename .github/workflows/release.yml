@@ -1,0 +1,53 @@
+name: Release
+
+# Builds an installable WordPress plugin zip and attaches it to a GitHub
+# Release whenever a version tag (v1.6.3, v1.6.4, ...) is pushed.
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch: {}
+
+env:
+  PLUGIN_SLUG: reveal-ids-for-wp-admin-25
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Determine version
+        id: version
+        run: |
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=0.0.0-dev" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build clean plugin directory
+        run: |
+          set -e
+          mkdir -p "build/${PLUGIN_SLUG}"
+          rsync -a --exclude-from='.distignore' ./ "build/${PLUGIN_SLUG}/"
+
+      - name: Create zip
+        run: |
+          cd build
+          zip -r "../${PLUGIN_SLUG}-${{ steps.version.outputs.version }}.zip" "${PLUGIN_SLUG}"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.PLUGIN_SLUG }}-${{ steps.version.outputs.version }}
+          path: ${{ env.PLUGIN_SLUG }}-${{ steps.version.outputs.version }}.zip
+
+      - name: Create GitHub Release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.PLUGIN_SLUG }}-${{ steps.version.outputs.version }}.zip
+          generate_release_notes: true

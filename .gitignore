@@ -1,1 +1,5 @@
 .svn
+/vendor/
+composer.lock
+/build/
+*.zip

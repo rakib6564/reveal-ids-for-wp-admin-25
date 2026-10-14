@@ -1,0 +1,42 @@
+name: WordPress Coding Standards
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+jobs:
+  phpcs:
+    name: PHPCS (WordPress + PHPCompatibility)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          coverage: none
+          tools: composer:v2
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/composer
+          key: composer-${{ hashFiles('composer.json') }}
+
+      - name: Install Composer dependencies
+        run: composer install --no-progress --prefer-dist
+
+      - name: Run PHPCS against the WordPress ruleset
+        continue-on-error: true
+        run: |
+          vendor/bin/phpcs \
+            --standard=WordPress \
+            --extensions=php \
+            --ignore=vendor/*,build/*,languages/* \
+            --report=full \
+            .

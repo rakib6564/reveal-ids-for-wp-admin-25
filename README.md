@@ -1,5 +1,9 @@
 # Reveal IDs for WP Admin 2.5+
 
+[![PHP Lint](https://github.com/rakib6564/reveal-ids-for-wp-admin-25/actions/workflows/lint.yml/badge.svg)](https://github.com/rakib6564/reveal-ids-for-wp-admin-25/actions/workflows/lint.yml)
+[![WordPress Coding Standards](https://github.com/rakib6564/reveal-ids-for-wp-admin-25/actions/workflows/phpcs.yml/badge.svg)](https://github.com/rakib6564/reveal-ids-for-wp-admin-25/actions/workflows/phpcs.yml)
+[![Release](https://github.com/rakib6564/reveal-ids-for-wp-admin-25/actions/workflows/release.yml/badge.svg)](https://github.com/rakib6564/reveal-ids-for-wp-admin-25/actions/workflows/release.yml)
+
 **Restores the entry-ID columns that WordPress removed from admin list tables in version 2.5.**
 
 | | |
