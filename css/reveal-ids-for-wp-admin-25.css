@@ -1,0 +1,11 @@
+/*
+ * Reveal IDs for WP Admin - admin column styles
+ */
+
+table.widefat th.column-ridwpaid {
+	width: 80px;
+}
+
+table.widefat td.column-ridwpaid {
+	word-wrap: normal;
+}
